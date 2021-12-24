@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['stylelint-config-standard'],
+  extends: ['stylelint-config-standard', 'stylelint-config-css-modules'],
   // Rules for Tailwind CSS
   rules: {
     'at-rule-no-unknown': [

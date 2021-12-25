@@ -21,7 +21,7 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint'],
   rules: {
-    'no-console': 1,
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
     'linebreak-style': ['error', 'unix'],
     // We're not using pretter-plugin, because it contradicts this guide https://prettier.io/docs/en/integrating-with-linters.html
   },

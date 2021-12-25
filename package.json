@@ -8,14 +8,23 @@
     "lint:js": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "lint:css": "stylelint '**/*.css'",
     "format": "prettier --config .prettierrc '**/*.{js,ts,tsx,css,scss,md}' --write",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prisma:push": "prisma db push",
+    "prisma:seed": "prisma db seed",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@prisma/client": "^3.7.0",
+    "apollo-server-micro": "^3.5.0",
+    "graphql": "^16.2.0",
+    "micro": "^9.3.4",
+    "micro-cors": "^0.1.1",
     "next": "^12.0.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@types/node": "^17.0.4",
     "@types/react": "^17.0.38",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
@@ -29,15 +38,20 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.4",
     "prettier": "^2.5.1",
+    "prisma": "^3.7.0",
     "stylelint": "^14.2.0",
     "stylelint-config-css-modules": "^2.3.0",
     "stylelint-config-standard": "^24.0.0",
     "tailwindcss": "^3.0.0",
+    "ts-node": "^10.4.0",
     "typescript": "^4.5.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --fix",
     "*.css": "stylelint --fix",
     "*.--write": "prettier --write"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

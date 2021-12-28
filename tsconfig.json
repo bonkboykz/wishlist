@@ -19,7 +19,8 @@
       "@wishlist-components/*": ["components/*"],
       "@wishlist-graphql/*": ["graphql/*"],
       "@wishlist-lib/*": ["lib/*"]
-    }
+    },
+    "plugins": [{ "name": "nexus/typescript-language-service" }]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

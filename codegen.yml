@@ -1,0 +1,18 @@
+overwrite: true
+schema: 'graphql/schema.graphql'
+documents: 'graphql/**/*.graphql.ts'
+generates:
+  graphql/generated-types.tsx:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+    config:
+      withComponent: false
+      withHooks: true
+  graphql/graphql.schema.json:
+    plugins:
+      - 'introspection'
+  graphql/possible-types.ts:
+    plugins:
+      - 'fragment-matcher'

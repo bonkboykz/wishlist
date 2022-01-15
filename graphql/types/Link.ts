@@ -1,4 +1,4 @@
-import { intArg, objectType, stringArg, extendType } from 'nexus';
+import { intArg, objectType, queryType } from 'nexus';
 
 export const Link = objectType({
   name: 'Link',
@@ -14,105 +14,24 @@ export const Link = objectType({
   },
 });
 
-export const Edge = objectType({
-  name: 'Edges',
+export const LinksQuery = queryType({
   definition(t) {
-    t.string('cursor');
-    t.field('node', {
-      type: Link,
-    });
-  },
-});
-
-export const PageInfo = objectType({
-  name: 'PageInfo',
-  definition(t) {
-    t.string('endCursor');
-    t.boolean('hasNextPage');
-  },
-});
-
-export const Response = objectType({
-  name: 'Response',
-  definition(t) {
-    t.field('pageInfo', { type: PageInfo });
-    t.list.field('edges', {
-      type: Edge,
-    });
-  },
-});
-
-// get ALl Links
-export const LinksQuery = extendType({
-  type: 'Query',
-  definition(t) {
-    t.field('links', {
-      type: 'Response',
+    t.list.field('links', {
+      type: 'Link',
       args: {
-        first: intArg(),
-        after: stringArg(),
+        offset: intArg(),
+        limit: intArg(),
       },
       async resolve(_, args, ctx) {
-        let queryResults = null;
-
-        if (args.after) {
-          queryResults = await ctx.prisma.link.findMany({
-            take: args.first,
-            skip: 1,
-            cursor: {
-              id: args.after,
-            },
-            orderBy: {
-              index: 'asc',
-            },
-          });
-        } else {
-          queryResults = await ctx.prisma.link.findMany({
-            take: args.first,
-            orderBy: {
-              index: 'asc',
-            },
-          });
-        }
-
-        if (queryResults.length > 0) {
-          // last element
-          const lastLinkInResults = queryResults[queryResults.length - 1];
-          // cursor we'll return
-          const myCursor = lastLinkInResults.id;
-
-          // queries after the cursor to check if we have nextPage
-          const secondQueryResults = await ctx.prisma.link.findMany({
-            take: args.first,
-            cursor: {
-              id: myCursor,
-            },
-            orderBy: {
-              index: 'asc',
-            },
-          });
-
-          const result = {
-            pageInfo: {
-              endCursor: myCursor,
-              hasNextPage: secondQueryResults.length >= args.first,
-            },
-            edges: queryResults.map((link) => ({
-              cursor: link.id,
-              node: link,
-            })),
-          };
-
-          return result;
-        }
-
-        return {
-          pageInfo: {
-            endCursor: null,
-            hasNextPage: false,
+        const links = await ctx.prisma.link.findMany({
+          take: args.offset + 3,
+          skip: args.offset,
+          orderBy: {
+            index: 'asc',
           },
-          edges: [],
-        };
+        });
+
+        return links;
       },
     });
   },

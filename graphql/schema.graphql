@@ -2,11 +2,6 @@
 ### Do not make changes to this file directly
 
 
-type Edges {
-  cursor: String
-  node: Link
-}
-
 type Link {
   category: String
   description: String
@@ -18,18 +13,8 @@ type Link {
   userId: Int
 }
 
-type PageInfo {
-  endCursor: String
-  hasNextPage: Boolean
-}
-
 type Query {
-  links(after: String, first: Int): Response
-}
-
-type Response {
-  edges: [Edges]
-  pageInfo: PageInfo
+  links(limit: Int, offset: Int): [Link]
 }
 
 enum Role {

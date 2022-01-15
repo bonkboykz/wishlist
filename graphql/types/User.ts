@@ -1,4 +1,4 @@
-import { enumType, objectType } from 'nexus';
+import { enumType, objectType, extendType } from 'nexus';
 
 import { Link } from './Link';
 
@@ -28,4 +28,40 @@ export const User = objectType({
 const Role = enumType({
   name: 'Role',
   members: ['USER', 'ADMIN'],
+});
+
+export const UserFavorites = extendType({
+  type: 'Query',
+  definition(t) {
+    t.list.field('favorites', {
+      type: 'Link',
+      async resolve(_, _args, ctx) {
+        let user = await ctx.prisma.user.findUnique({
+          where: {
+            email: ctx.user.email,
+          },
+          include: {
+            favorites: true,
+          },
+        });
+
+        console.log(ctx.user);
+
+        if (!user) {
+          // If user is not in our db -> create new
+          user = await ctx.prisma.user.create({
+            data: {
+              email: ctx.user.email,
+              image: ctx.user.picture,
+            },
+            include: {
+              favorites: true,
+            },
+          });
+        }
+
+        return user.favorites;
+      },
+    });
+  },
 });

@@ -14,6 +14,7 @@ type Link {
 }
 
 type Query {
+  favorites: [Link]
   links(limit: Int, offset: Int): [Link]
 }
 

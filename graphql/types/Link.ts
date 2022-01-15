@@ -1,4 +1,4 @@
-import { intArg, objectType, queryType } from 'nexus';
+import { intArg, objectType, extendType } from 'nexus';
 
 export const Link = objectType({
   name: 'Link',
@@ -14,7 +14,8 @@ export const Link = objectType({
   },
 });
 
-export const LinksQuery = queryType({
+export const LinksQuery = extendType({
+  type: 'Query',
   definition(t) {
     t.list.field('links', {
       type: 'Link',

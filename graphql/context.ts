@@ -11,11 +11,11 @@ export type Context = {
 };
 
 export async function createContext({ req, res }): Promise<Context> {
-  const { user, accessToken } = getSession(req, res);
+  const userSession = getSession(req, res);
 
   return {
-    user,
-    accessToken,
+    user: userSession?.user,
+    accessToken: userSession?.accessToken,
     prisma,
   };
 }

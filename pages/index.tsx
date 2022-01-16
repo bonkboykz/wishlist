@@ -1,8 +1,17 @@
 import Head from 'next/head';
-import { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useUser } from '@auth0/nextjs-auth0';
+
+import { IconHeart } from '@wishlist-components/Icon/IconHeart';
+import {
+  useAllLinksQuery,
+  useBookmarkLinkMutation,
+  useFavoriteLinksQuery,
+} from '@wishlist-graphql/generated-types';
+import apolloClient from '@wishlist-lib/apollo';
+import { FavoriteLinksDocument } from '@wishlist-graphql/documents/user.graphql';
 
 import { AwesomeLink } from '@wishlist-components/AwesomeLink';
-import { useAllLinksQuery } from '@wishlist-graphql/generated-types';
 
 export default function Home() {
   const { data, loading, error, fetchMore } = useAllLinksQuery({
@@ -29,6 +38,40 @@ export default function Home() {
     });
   }, [fetchMore, data]);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [createBookmark] = useBookmarkLinkMutation();
+
+  const { user } = useUser();
+  const { data: favoritesData, loading: loadingFavorites } =
+    useFavoriteLinksQuery();
+
+  const isLinkBookmarked = useCallback(
+    (id) => {
+      console.log(favoritesData?.favorites, id);
+
+      return Boolean(favoritesData?.favorites.find((link) => link.id === id));
+    },
+    [favoritesData],
+  );
+
+  const bookmarkLink = useCallback(
+    async (id) => {
+      setIsLoading(true);
+
+      try {
+        await createBookmark({ variables: { id } });
+        await apolloClient.refetchQueries({
+          include: [FavoriteLinksDocument],
+        });
+      } catch (e) {
+        console.error(e);
+      }
+
+      setIsLoading(false);
+    },
+    [createBookmark],
+  );
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
 
@@ -49,7 +92,16 @@ export default function Home() {
               id={link.id}
               description={link.description}
               imageUrl={link.imageUrl}
-            />
+            >
+              {user && !loadingFavorites && (
+                <button
+                  onClick={() => bookmarkLink(link.id)}
+                  disabled={isLoading}
+                >
+                  <IconHeart pressed={isLinkBookmarked(link.id)} />
+                </button>
+              )}
+            </AwesomeLink>
           ))}
         </div>
         {showMoreButton && (

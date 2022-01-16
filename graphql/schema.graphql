@@ -13,6 +13,10 @@ type Link {
   userId: Int
 }
 
+type Mutation {
+  bookmarkLink(id: String): Link
+}
+
 type Query {
   favorites: [Link]
   links(limit: Int, offset: Int): [Link]

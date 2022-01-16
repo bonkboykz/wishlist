@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 export const AwesomeLink = ({
   imageUrl,
@@ -7,6 +7,7 @@ export const AwesomeLink = ({
   category,
   description,
   id,
+  children,
 }) => {
   return (
     <div key={id} className="shadow  max-w-md  rounded">
@@ -28,6 +29,7 @@ export const AwesomeLink = ({
             <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path>
           </svg>
         </a>
+        {children}
       </div>
     </div>
   );

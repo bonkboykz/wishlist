@@ -27,6 +27,16 @@ export type Link = {
   userId?: Maybe<Scalars['Int']>;
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  bookmarkLink?: Maybe<Link>;
+};
+
+
+export type MutationBookmarkLinkArgs = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   favorites?: Maybe<Array<Maybe<Link>>>;
@@ -66,6 +76,13 @@ export type FavoriteLinksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FavoriteLinksQuery = { __typename?: 'Query', favorites?: Array<{ __typename?: 'Link', title?: string | null | undefined, id?: string | null | undefined, url?: string | null | undefined, imageUrl?: string | null | undefined, description?: string | null | undefined, category?: string | null | undefined } | null | undefined> | null | undefined };
+
+export type BookmarkLinkMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type BookmarkLinkMutation = { __typename?: 'Mutation', bookmarkLink?: { __typename?: 'Link', title?: string | null | undefined, url?: string | null | undefined, imageUrl?: string | null | undefined, category?: string | null | undefined, description?: string | null | undefined } | null | undefined };
 
 
 export const AllLinksDocument = gql`
@@ -153,3 +170,41 @@ return Apollo.useLazyQuery<FavoriteLinksQuery, FavoriteLinksQueryVariables>(Favo
 export type FavoriteLinksQueryHookResult = ReturnType<typeof useFavoriteLinksQuery>;
 export type FavoriteLinksLazyQueryHookResult = ReturnType<typeof useFavoriteLinksLazyQuery>;
 export type FavoriteLinksQueryResult = Apollo.QueryResult<FavoriteLinksQuery, FavoriteLinksQueryVariables>;
+export const BookmarkLinkDocument = gql`
+    mutation bookmarkLink($id: String!) {
+  bookmarkLink(id: $id) {
+    title
+    url
+    imageUrl
+    category
+    description
+  }
+}
+    `;
+export type BookmarkLinkMutationFn = Apollo.MutationFunction<BookmarkLinkMutation, BookmarkLinkMutationVariables>;
+
+/**
+ * __useBookmarkLinkMutation__
+ *
+ * To run a mutation, you first call `useBookmarkLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBookmarkLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bookmarkLinkMutation, { data, loading, error }] = useBookmarkLinkMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useBookmarkLinkMutation(baseOptions?: Apollo.MutationHookOptions<BookmarkLinkMutation, BookmarkLinkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        
+return Apollo.useMutation<BookmarkLinkMutation, BookmarkLinkMutationVariables>(BookmarkLinkDocument, options);
+      }
+export type BookmarkLinkMutationHookResult = ReturnType<typeof useBookmarkLinkMutation>;
+export type BookmarkLinkMutationResult = Apollo.MutationResult<BookmarkLinkMutation>;
+export type BookmarkLinkMutationOptions = Apollo.BaseMutationOptions<BookmarkLinkMutation, BookmarkLinkMutationVariables>;

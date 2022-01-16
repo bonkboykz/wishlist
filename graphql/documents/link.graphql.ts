@@ -13,16 +13,3 @@ export const AllLinksDocument = gql`
     }
   }
 `;
-
-export const FavoriteLinksDocument = gql`
-  query favoriteLinks {
-    favorites {
-      title
-      id
-      url
-      imageUrl
-      description
-      category
-    }
-  }
-`;

@@ -2,10 +2,16 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -30,11 +36,19 @@ export type Link = {
 export type Mutation = {
   __typename?: 'Mutation';
   bookmarkLink?: Maybe<Link>;
+  createLink: Link;
 };
-
 
 export type MutationBookmarkLinkArgs = {
   id?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationCreateLinkArgs = {
+  category: Scalars['String'];
+  description: Scalars['String'];
+  imageUrl: Scalars['String'];
+  title: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type Query = {
@@ -43,7 +57,6 @@ export type Query = {
   links?: Maybe<Array<Maybe<Link>>>;
 };
 
-
 export type QueryLinksArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -51,7 +64,7 @@ export type QueryLinksArgs = {
 
 export enum Role {
   Admin = 'ADMIN',
-  User = 'USER'
+  User = 'USER',
 }
 
 export type User = {
@@ -69,35 +82,101 @@ export type AllLinksQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
+export type AllLinksQuery = {
+  __typename?: 'Query';
+  links?:
+    | Array<
+        | {
+            __typename?: 'Link';
+            index?: number | null | undefined;
+            imageUrl?: string | null | undefined;
+            url?: string | null | undefined;
+            title?: string | null | undefined;
+            category?: string | null | undefined;
+            description?: string | null | undefined;
+            id?: string | null | undefined;
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
+};
 
-export type AllLinksQuery = { __typename?: 'Query', links?: Array<{ __typename?: 'Link', index?: number | null | undefined, imageUrl?: string | null | undefined, url?: string | null | undefined, title?: string | null | undefined, category?: string | null | undefined, description?: string | null | undefined, id?: string | null | undefined } | null | undefined> | null | undefined };
+export type CreateLinkMutationVariables = Exact<{
+  title: Scalars['String'];
+  url: Scalars['String'];
+  imageUrl: Scalars['String'];
+  category: Scalars['String'];
+  description: Scalars['String'];
+}>;
 
-export type FavoriteLinksQueryVariables = Exact<{ [key: string]: never; }>;
+export type CreateLinkMutation = {
+  __typename?: 'Mutation';
+  createLink: {
+    __typename?: 'Link';
+    title?: string | null | undefined;
+    url?: string | null | undefined;
+    imageUrl?: string | null | undefined;
+    category?: string | null | undefined;
+    description?: string | null | undefined;
+  };
+};
 
+export type FavoriteLinksQueryVariables = Exact<{ [key: string]: never }>;
 
-export type FavoriteLinksQuery = { __typename?: 'Query', favorites?: Array<{ __typename?: 'Link', title?: string | null | undefined, id?: string | null | undefined, url?: string | null | undefined, imageUrl?: string | null | undefined, description?: string | null | undefined, category?: string | null | undefined } | null | undefined> | null | undefined };
+export type FavoriteLinksQuery = {
+  __typename?: 'Query';
+  favorites?:
+    | Array<
+        | {
+            __typename?: 'Link';
+            title?: string | null | undefined;
+            id?: string | null | undefined;
+            url?: string | null | undefined;
+            imageUrl?: string | null | undefined;
+            description?: string | null | undefined;
+            category?: string | null | undefined;
+          }
+        | null
+        | undefined
+      >
+    | null
+    | undefined;
+};
 
 export type BookmarkLinkMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
-
-export type BookmarkLinkMutation = { __typename?: 'Mutation', bookmarkLink?: { __typename?: 'Link', title?: string | null | undefined, url?: string | null | undefined, imageUrl?: string | null | undefined, category?: string | null | undefined, description?: string | null | undefined } | null | undefined };
-
+export type BookmarkLinkMutation = {
+  __typename?: 'Mutation';
+  bookmarkLink?:
+    | {
+        __typename?: 'Link';
+        title?: string | null | undefined;
+        url?: string | null | undefined;
+        imageUrl?: string | null | undefined;
+        category?: string | null | undefined;
+        description?: string | null | undefined;
+      }
+    | null
+    | undefined;
+};
 
 export const AllLinksDocument = gql`
-    query allLinks($offset: Int, $limit: Int) {
-  links(offset: $offset, limit: $limit) {
-    index
-    imageUrl
-    url
-    title
-    category
-    description
-    id
+  query allLinks($offset: Int, $limit: Int) {
+    links(offset: $offset, limit: $limit) {
+      index
+      imageUrl
+      url
+      title
+      category
+      description
+      id
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useAllLinksQuery__
@@ -116,31 +195,120 @@ export const AllLinksDocument = gql`
  *   },
  * });
  */
-export function useAllLinksQuery(baseOptions?: Apollo.QueryHookOptions<AllLinksQuery, AllLinksQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        
-return Apollo.useQuery<AllLinksQuery, AllLinksQueryVariables>(AllLinksDocument, options);
-      }
-export function useAllLinksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllLinksQuery, AllLinksQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          
-return Apollo.useLazyQuery<AllLinksQuery, AllLinksQueryVariables>(AllLinksDocument, options);
-        }
-export type AllLinksQueryHookResult = ReturnType<typeof useAllLinksQuery>;
-export type AllLinksLazyQueryHookResult = ReturnType<typeof useAllLinksLazyQuery>;
-export type AllLinksQueryResult = Apollo.QueryResult<AllLinksQuery, AllLinksQueryVariables>;
-export const FavoriteLinksDocument = gql`
-    query favoriteLinks {
-  favorites {
-    title
-    id
-    url
-    imageUrl
-    description
-    category
-  }
+export function useAllLinksQuery(
+  baseOptions?: Apollo.QueryHookOptions<AllLinksQuery, AllLinksQueryVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+
+  return Apollo.useQuery<AllLinksQuery, AllLinksQueryVariables>(
+    AllLinksDocument,
+    options,
+  );
 }
-    `;
+export function useAllLinksLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AllLinksQuery,
+    AllLinksQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+
+  return Apollo.useLazyQuery<AllLinksQuery, AllLinksQueryVariables>(
+    AllLinksDocument,
+    options,
+  );
+}
+export type AllLinksQueryHookResult = ReturnType<typeof useAllLinksQuery>;
+export type AllLinksLazyQueryHookResult = ReturnType<
+  typeof useAllLinksLazyQuery
+>;
+export type AllLinksQueryResult = Apollo.QueryResult<
+  AllLinksQuery,
+  AllLinksQueryVariables
+>;
+export const CreateLinkDocument = gql`
+  mutation createLink(
+    $title: String!
+    $url: String!
+    $imageUrl: String!
+    $category: String!
+    $description: String!
+  ) {
+    createLink(
+      title: $title
+      url: $url
+      imageUrl: $imageUrl
+      category: $category
+      description: $description
+    ) {
+      title
+      url
+      imageUrl
+      category
+      description
+    }
+  }
+`;
+export type CreateLinkMutationFn = Apollo.MutationFunction<
+  CreateLinkMutation,
+  CreateLinkMutationVariables
+>;
+
+/**
+ * __useCreateLinkMutation__
+ *
+ * To run a mutation, you first call `useCreateLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLinkMutation, { data, loading, error }] = useCreateLinkMutation({
+ *   variables: {
+ *      title: // value for 'title'
+ *      url: // value for 'url'
+ *      imageUrl: // value for 'imageUrl'
+ *      category: // value for 'category'
+ *      description: // value for 'description'
+ *   },
+ * });
+ */
+export function useCreateLinkMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateLinkMutation,
+    CreateLinkMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+
+  return Apollo.useMutation<CreateLinkMutation, CreateLinkMutationVariables>(
+    CreateLinkDocument,
+    options,
+  );
+}
+export type CreateLinkMutationHookResult = ReturnType<
+  typeof useCreateLinkMutation
+>;
+export type CreateLinkMutationResult =
+  Apollo.MutationResult<CreateLinkMutation>;
+export type CreateLinkMutationOptions = Apollo.BaseMutationOptions<
+  CreateLinkMutation,
+  CreateLinkMutationVariables
+>;
+export const FavoriteLinksDocument = gql`
+  query favoriteLinks {
+    favorites {
+      title
+      id
+      url
+      imageUrl
+      description
+      category
+    }
+  }
+`;
 
 /**
  * __useFavoriteLinksQuery__
@@ -157,31 +325,57 @@ export const FavoriteLinksDocument = gql`
  *   },
  * });
  */
-export function useFavoriteLinksQuery(baseOptions?: Apollo.QueryHookOptions<FavoriteLinksQuery, FavoriteLinksQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        
-return Apollo.useQuery<FavoriteLinksQuery, FavoriteLinksQueryVariables>(FavoriteLinksDocument, options);
-      }
-export function useFavoriteLinksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FavoriteLinksQuery, FavoriteLinksQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          
-return Apollo.useLazyQuery<FavoriteLinksQuery, FavoriteLinksQueryVariables>(FavoriteLinksDocument, options);
-        }
-export type FavoriteLinksQueryHookResult = ReturnType<typeof useFavoriteLinksQuery>;
-export type FavoriteLinksLazyQueryHookResult = ReturnType<typeof useFavoriteLinksLazyQuery>;
-export type FavoriteLinksQueryResult = Apollo.QueryResult<FavoriteLinksQuery, FavoriteLinksQueryVariables>;
-export const BookmarkLinkDocument = gql`
-    mutation bookmarkLink($id: String!) {
-  bookmarkLink(id: $id) {
-    title
-    url
-    imageUrl
-    category
-    description
-  }
+export function useFavoriteLinksQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    FavoriteLinksQuery,
+    FavoriteLinksQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+
+  return Apollo.useQuery<FavoriteLinksQuery, FavoriteLinksQueryVariables>(
+    FavoriteLinksDocument,
+    options,
+  );
 }
-    `;
-export type BookmarkLinkMutationFn = Apollo.MutationFunction<BookmarkLinkMutation, BookmarkLinkMutationVariables>;
+export function useFavoriteLinksLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FavoriteLinksQuery,
+    FavoriteLinksQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+
+  return Apollo.useLazyQuery<FavoriteLinksQuery, FavoriteLinksQueryVariables>(
+    FavoriteLinksDocument,
+    options,
+  );
+}
+export type FavoriteLinksQueryHookResult = ReturnType<
+  typeof useFavoriteLinksQuery
+>;
+export type FavoriteLinksLazyQueryHookResult = ReturnType<
+  typeof useFavoriteLinksLazyQuery
+>;
+export type FavoriteLinksQueryResult = Apollo.QueryResult<
+  FavoriteLinksQuery,
+  FavoriteLinksQueryVariables
+>;
+export const BookmarkLinkDocument = gql`
+  mutation bookmarkLink($id: String!) {
+    bookmarkLink(id: $id) {
+      title
+      url
+      imageUrl
+      category
+      description
+    }
+  }
+`;
+export type BookmarkLinkMutationFn = Apollo.MutationFunction<
+  BookmarkLinkMutation,
+  BookmarkLinkMutationVariables
+>;
 
 /**
  * __useBookmarkLinkMutation__
@@ -200,11 +394,25 @@ export type BookmarkLinkMutationFn = Apollo.MutationFunction<BookmarkLinkMutatio
  *   },
  * });
  */
-export function useBookmarkLinkMutation(baseOptions?: Apollo.MutationHookOptions<BookmarkLinkMutation, BookmarkLinkMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        
-return Apollo.useMutation<BookmarkLinkMutation, BookmarkLinkMutationVariables>(BookmarkLinkDocument, options);
-      }
-export type BookmarkLinkMutationHookResult = ReturnType<typeof useBookmarkLinkMutation>;
-export type BookmarkLinkMutationResult = Apollo.MutationResult<BookmarkLinkMutation>;
-export type BookmarkLinkMutationOptions = Apollo.BaseMutationOptions<BookmarkLinkMutation, BookmarkLinkMutationVariables>;
+export function useBookmarkLinkMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    BookmarkLinkMutation,
+    BookmarkLinkMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+
+  return Apollo.useMutation<
+    BookmarkLinkMutation,
+    BookmarkLinkMutationVariables
+  >(BookmarkLinkDocument, options);
+}
+export type BookmarkLinkMutationHookResult = ReturnType<
+  typeof useBookmarkLinkMutation
+>;
+export type BookmarkLinkMutationResult =
+  Apollo.MutationResult<BookmarkLinkMutation>;
+export type BookmarkLinkMutationOptions = Apollo.BaseMutationOptions<
+  BookmarkLinkMutation,
+  BookmarkLinkMutationVariables
+>;

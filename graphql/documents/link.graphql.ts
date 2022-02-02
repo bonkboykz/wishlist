@@ -13,3 +13,27 @@ export const AllLinksDocument = gql`
     }
   }
 `;
+
+export const CreateLinkMutationDocument = gql`
+  mutation createLink(
+    $title: String!
+    $url: String!
+    $imageUrl: String!
+    $category: String!
+    $description: String!
+  ) {
+    createLink(
+      title: $title
+      url: $url
+      imageUrl: $imageUrl
+      category: $category
+      description: $description
+    ) {
+      title
+      url
+      imageUrl
+      category
+      description
+    }
+  }
+`;

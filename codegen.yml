@@ -16,3 +16,9 @@ generates:
   graphql/possible-types.ts:
     plugins:
       - 'fragment-matcher'
+hooks:
+  afterOneFileWrite:
+    - eslint --cache --fix
+    - prettier --write
+  onError:
+    - npm run nexus:reflect

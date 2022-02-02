@@ -15,6 +15,7 @@ type Link {
 
 type Mutation {
   bookmarkLink(id: String): Link
+  createLink(category: String!, description: String!, imageUrl: String!, title: String!, url: String!): Link!
 }
 
 type Query {

@@ -1,4 +1,4 @@
-import { intArg, objectType, extendType } from 'nexus';
+import { intArg, objectType, extendType, nonNull, stringArg } from 'nexus';
 
 export const Link = objectType({
   name: 'Link',
@@ -33,6 +33,45 @@ export const LinksQuery = extendType({
         });
 
         return links;
+      },
+    });
+  },
+});
+
+export const CreateLink = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nonNull.field('createLink', {
+      type: 'Link',
+      args: {
+        title: nonNull(stringArg()),
+        url: nonNull(stringArg()),
+        imageUrl: nonNull(stringArg()),
+        category: nonNull(stringArg()),
+        description: nonNull(stringArg()),
+      },
+      async resolve(_parent, args, ctx) {
+        const user = await ctx.prisma.user.findUnique({
+          where: {
+            email: ctx.user.email,
+          },
+        });
+
+        // if (!user || user.role !== 'ADMIN') {
+        //   throw new Error(`You do not have permission to perform action`);
+        // }
+
+        const newLink = {
+          title: args.title,
+          url: args.url,
+          imageUrl: args.imageUrl,
+          category: args.category,
+          description: args.description,
+        };
+
+        return await ctx.prisma.link.create({
+          data: newLink,
+        });
       },
     });
   },

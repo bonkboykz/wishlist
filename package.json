@@ -15,7 +15,8 @@
     "prisma:push": "prisma db push",
     "prisma:seed": "prisma db seed",
     "prisma:studio": "prisma studio",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml",
+    "nexus:reflect": "ts-node --inspect 'grapql/types/**' --transpile-only graphql/schema.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.5.6",
@@ -25,13 +26,16 @@
     "@heroicons/react": "^1.0.5",
     "@prisma/client": "^3.7.0",
     "apollo-server-micro": "^3.5.0",
+    "aws-sdk": "^2.1066.0",
     "graphql": "^15.8.0",
     "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
     "next": "^12.0.7",
     "nexus": "^1.2.0-next.17",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.25.3",
+    "react-hot-toast": "^2.2.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.3.0",

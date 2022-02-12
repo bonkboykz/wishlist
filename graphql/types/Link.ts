@@ -5,7 +5,10 @@ export const Link = objectType({
   definition(t) {
     t.string('id');
     t.int('index');
-    t.int('userId');
+    t.string('authorId');
+    t.field('author', {
+      type: 'User',
+    });
     t.string('title');
     t.string('url');
     t.string('description');
@@ -29,6 +32,9 @@ export const LinksQuery = extendType({
           skip: args.offset,
           orderBy: {
             index: 'asc',
+          },
+          include: {
+            author: true,
           },
         });
 
@@ -67,10 +73,40 @@ export const CreateLink = extendType({
           imageUrl: args.imageUrl,
           category: args.category,
           description: args.description,
+          authorId: user.id,
         };
 
         return await ctx.prisma.link.create({
           data: newLink,
+        });
+      },
+    });
+  },
+});
+
+export const UpdateLink = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nonNull.field('updateLink', {
+      type: 'Link',
+      args: {
+        id: stringArg(),
+        title: stringArg(),
+        url: stringArg(),
+        imageUrl: stringArg(),
+        category: stringArg(),
+        description: stringArg(),
+      },
+      resolve(_parent, args, ctx) {
+        return ctx.prisma.link.update({
+          where: { id: args.id },
+          data: {
+            title: args.title,
+            url: args.url,
+            imageUrl: args.imageUrl,
+            category: args.category,
+            description: args.description,
+          },
         });
       },
     });

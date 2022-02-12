@@ -3,7 +3,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@wishlist-lib/prisma';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, secret } = req.body;
+  const { email, secret, sub } = req.body;
+
+  console.log(req.body);
   if (req.method !== 'POST') {
     return res.status(403).json({ message: 'Method not allowed' });
   }
@@ -12,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   if (email) {
     await prisma.user.create({
-      data: { email },
+      data: { email, id: sub },
     });
 
     return res.status(200).json({

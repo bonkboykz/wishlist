@@ -3,6 +3,8 @@
 
 
 type Link {
+  author: User
+  authorId: String
   category: String
   description: String
   id: String
@@ -10,12 +12,12 @@ type Link {
   index: Int
   title: String
   url: String
-  userId: Int
 }
 
 type Mutation {
   bookmarkLink(id: String): Link
   createLink(category: String!, description: String!, imageUrl: String!, title: String!, url: String!): Link!
+  updateLink(category: String, description: String, id: String, imageUrl: String, title: String, url: String): Link!
 }
 
 type Query {

@@ -5,6 +5,7 @@
     "dev:next": "next dev",
     "dev:codegen": "npm run codegen -- --watch",
     "dev:prisma": "npm-run-all -s prisma:push prisma:studio",
+    "dev:nexus": "ts-node-dev --watch 'grapql/types/**' --respawn --transpile-only graphql/schema.ts",
     "build": "next build",
     "start": "next start",
     "lint": "npm-run-all -p lint:*",
@@ -14,9 +15,8 @@
     "prepare": "husky install",
     "prisma:push": "prisma db push",
     "prisma:seed": "prisma db seed",
-    "prisma:studio": "prisma studio",
-    "codegen": "graphql-codegen --config codegen.yml",
-    "nexus:reflect": "ts-node --inspect 'grapql/types/**' --transpile-only graphql/schema.ts"
+    "prisma:studio": "prisma studio --browser none",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@apollo/client": "^3.5.6",
@@ -66,6 +66,7 @@
     "stylelint-config-standard": "^24.0.0",
     "tailwindcss": "^3.0.0",
     "ts-node": "^10.4.0",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.4"
   },
   "lint-staged": {

@@ -12,6 +12,7 @@ import apolloClient from '@wishlist-lib/apollo';
 import { FavoriteLinksDocument } from '@wishlist-graphql/documents/user.graphql';
 
 import { AwesomeLink } from '@wishlist-components/AwesomeLink';
+import Link from 'next/link';
 
 export default function Home() {
   const { data, loading, error, fetchMore } = useAllLinksQuery({
@@ -101,6 +102,12 @@ export default function Home() {
                   <IconHeart pressed={isLinkBookmarked(link.id)} />
                 </button>
               )}
+
+              {user &&
+                (user.email === 'test@admin.com' ||
+                  link.author.id === user.sub) && (
+                  <Link href={`links/${link.id}`}>Edit</Link>
+                )}
             </AwesomeLink>
           ))}
         </div>

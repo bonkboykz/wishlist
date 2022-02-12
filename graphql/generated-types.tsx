@@ -23,6 +23,8 @@ export type Scalars = {
 
 export type Link = {
   __typename?: 'Link';
+  author?: Maybe<User>;
+  authorId?: Maybe<Scalars['String']>;
   category?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
@@ -30,13 +32,13 @@ export type Link = {
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['Int']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   bookmarkLink?: Maybe<Link>;
   createLink: Link;
+  updateLink: Link;
 };
 
 export type MutationBookmarkLinkArgs = {
@@ -49,6 +51,15 @@ export type MutationCreateLinkArgs = {
   imageUrl: Scalars['String'];
   title: Scalars['String'];
   url: Scalars['String'];
+};
+
+export type MutationUpdateLinkArgs = {
+  category?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  imageUrl?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -95,6 +106,15 @@ export type AllLinksQuery = {
             category?: string | null | undefined;
             description?: string | null | undefined;
             id?: string | null | undefined;
+            author?:
+              | {
+                  __typename?: 'User';
+                  id?: string | null | undefined;
+                  name?: string | null | undefined;
+                  email?: string | null | undefined;
+                }
+              | null
+              | undefined;
           }
         | null
         | undefined
@@ -120,6 +140,37 @@ export type CreateLinkMutation = {
     imageUrl?: string | null | undefined;
     category?: string | null | undefined;
     description?: string | null | undefined;
+  };
+};
+
+export type UpdateLinkMutationVariables = Exact<{
+  id: Scalars['String'];
+  title?: InputMaybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
+  imageUrl?: InputMaybe<Scalars['String']>;
+  category?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+}>;
+
+export type UpdateLinkMutation = {
+  __typename?: 'Mutation';
+  updateLink: {
+    __typename?: 'Link';
+    id?: string | null | undefined;
+    title?: string | null | undefined;
+    url?: string | null | undefined;
+    imageUrl?: string | null | undefined;
+    category?: string | null | undefined;
+    description?: string | null | undefined;
+    author?:
+      | {
+          __typename?: 'User';
+          id?: string | null | undefined;
+          name?: string | null | undefined;
+          email?: string | null | undefined;
+        }
+      | null
+      | undefined;
   };
 };
 
@@ -174,6 +225,11 @@ export const AllLinksDocument = gql`
       category
       description
       id
+      author {
+        id
+        name
+        email
+      }
     }
   }
 `;
@@ -296,6 +352,86 @@ export type CreateLinkMutationResult =
 export type CreateLinkMutationOptions = Apollo.BaseMutationOptions<
   CreateLinkMutation,
   CreateLinkMutationVariables
+>;
+export const UpdateLinkDocument = gql`
+  mutation updateLink(
+    $id: String!
+    $title: String
+    $url: String
+    $imageUrl: String
+    $category: String
+    $description: String
+  ) {
+    updateLink(
+      id: $id
+      title: $title
+      url: $url
+      imageUrl: $imageUrl
+      category: $category
+      description: $description
+    ) {
+      id
+      title
+      url
+      imageUrl
+      category
+      description
+      author {
+        id
+        name
+        email
+      }
+    }
+  }
+`;
+export type UpdateLinkMutationFn = Apollo.MutationFunction<
+  UpdateLinkMutation,
+  UpdateLinkMutationVariables
+>;
+
+/**
+ * __useUpdateLinkMutation__
+ *
+ * To run a mutation, you first call `useUpdateLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLinkMutation, { data, loading, error }] = useUpdateLinkMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      title: // value for 'title'
+ *      url: // value for 'url'
+ *      imageUrl: // value for 'imageUrl'
+ *      category: // value for 'category'
+ *      description: // value for 'description'
+ *   },
+ * });
+ */
+export function useUpdateLinkMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateLinkMutation,
+    UpdateLinkMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+
+  return Apollo.useMutation<UpdateLinkMutation, UpdateLinkMutationVariables>(
+    UpdateLinkDocument,
+    options,
+  );
+}
+export type UpdateLinkMutationHookResult = ReturnType<
+  typeof useUpdateLinkMutation
+>;
+export type UpdateLinkMutationResult =
+  Apollo.MutationResult<UpdateLinkMutation>;
+export type UpdateLinkMutationOptions = Apollo.BaseMutationOptions<
+  UpdateLinkMutation,
+  UpdateLinkMutationVariables
 >;
 export const FavoriteLinksDocument = gql`
   query favoriteLinks {

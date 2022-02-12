@@ -5,15 +5,18 @@ import { links } from './data/links';
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.user.create({
+  const admin = await prisma.user.create({
     data: {
-      email: `testemail@gmail.com`,
+      email: `admin@test.com`,
       role: 'ADMIN',
     },
   });
 
   await prisma.link.createMany({
-    data: links,
+    data: links.map((link) => ({
+      ...link,
+      authorId: admin.id,
+    })),
   });
 }
 

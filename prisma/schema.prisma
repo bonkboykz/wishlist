@@ -17,7 +17,8 @@ model Link {
   category    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  users       User[]
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
 }
 
 model User {

@@ -20,5 +20,5 @@ hooks:
   afterOneFileWrite:
     - eslint --cache --fix
     - prettier --write
-  onError:
-    - npm run nexus:reflect
+  # onError:
+  #   - npm run nexus:reflect

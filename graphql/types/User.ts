@@ -51,6 +51,7 @@ export const UserFavorites = extendType({
           // If user is not in our db -> create new
           user = await ctx.prisma.user.create({
             data: {
+              id: ctx.user.sub,
               email: ctx.user.email,
               image: ctx.user.picture,
             },
